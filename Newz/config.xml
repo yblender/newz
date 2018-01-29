@@ -82,10 +82,9 @@
     <plugin name="cordova-plugin-splashscreen" spec="~4.0.1" />
     <plugin name="cordova-plugin-ionic-webview" spec="^1.1.11" />
     <plugin name="cordova-plugin-advanced-http" spec="^1.9.1" />
-    <engine name="android" spec="~7.0.0" />
     <vs:toolsetVersion xmlns:vs="http://schemas.microsoft.com/appx/2014/htmlapps">6.3.1</vs:toolsetVersion>
-    <engine name="android" spec="5.2.1" />
+    <preference name="windows-target-version" value="10.0" />
+    <engine name="android" spec="7.0.0" />
     <engine name="ios" spec="4.2.0" />
     <engine name="windows" spec="4.4.2" />
-    <preference name="windows-target-version" value="10.0" />
 </widget>
