@@ -11,29 +11,51 @@
 
   <ion-item>
     <ion-label color="primary"></ion-label>
-    <ion-input placeholder="Text Input" [(ngModel)]="searchTerm"></ion-input>
+    <ion-input placeholder="Search for something i guess..." [(ngModel)]="searchTerm"></ion-input>
   </ion-item>
   <button ion-button round (click)="getNews()">Search</button>
-  <button ion-button round (click)="getNews()">Headlines</button>
-  <ion-select [(ngModel)]="selectedValue" (ionChange)="changeCountry($event)">
-    <ion-option *ngFor="let country of countries" [value]="country.value">{{country.name}}</ion-option>
-  </ion-select>
-  <ion-list>
-    <ion-item *ngFor="let article of articles; let i=index" text-wrap (click)="toggleGroup(i)" [ngClass]="{active: isGroupShown(i)}">
-      <h2>{{article.title}}</h2>
-      <ion-icon color="success" item-right [name]="isGroupShown(i) ? 'arrow-dropdown' : 'arrow-dropright'"></ion-icon>
-      <div *ngIf="isGroupShown(i)">
-        <ion-img  width="80" height="80"  src="{{article.urlToImage}}"  ></ion-img>
-        {{article.description}}
-        <p>source: {{article.source.name}}</p>
-        <a href="{{article.url}}">Link</a>
-      </div>
-
+  <button ion-button round (click)="getHeadlines()">Headlines</button>
+  <button ion-button round (click)="toggleGroup(i)">Search Settings</button>
+ 
+  <div *ngIf="isGroupShown(i)">
+    <ion-item>
+      <ion-label>Country</ion-label>
+      <ion-select [(ngModel)]="selectedCountry.value" (ionChange)="changeCountry($event)">
+        <button ion-button round>test</button>
+        <ion-option *ngFor="let country of countries" [value]="country.value">{{country.name}}</ion-option>
+      </ion-select>
     </ion-item>
-  </ion-list>
-  <ion-infinite-scroll (ion-infinite)="getMoreHeadlines()" immediate-check="true"
-                       distance="10%">
-    <ion-infinite-scroll-content></ion-infinite-scroll-content>
-  </ion-infinite-scroll>
+    <ion-item>
+      <ion-label>Category</ion-label>
+      <ion-select (ionChange)="getHeadlinesByCategory($event)">
+        <ion-option *ngFor="let category of categories" [value]="category">{{category}}</ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>Sources</ion-label>
+      <ion-select [(ngModel)]="selectedSources" (ionChange)="updateSources($event)" multiple="true">
+
+        <ion-option *ngFor="let source of sources" [value]="source.id">{{source.name}}</ion-option>
+      </ion-select>
+    </ion-item>
+    </div>
+    <ion-list>
+      <ion-item *ngFor="let article of articles; let i=index" text-wrap (click)="toggleGroup(i)" [ngClass]="{active: isGroupShown(i)}">
+        <h2>{{article.title}}</h2>
+        <ion-icon color="success" item-right [name]="isGroupShown(i) ? 'arrow-dropdown' : 'arrow-dropright'"></ion-icon>
+        <div *ngIf="isGroupShown(i)">
+          <img width="80" height="80" src="{{article.urlToImage}}"/>
+          {{article.description}}
+          <p>source: {{article.source.name}}</p>
+          <a class="item" href="{{article.url}}">Link</a>
+          <p>published at: {{article.publishedAt}}</p>
+          
+        </div>
+
+      </ion-item>
+    </ion-list>
+    <ion-infinite-scroll (ionInfinite)="getMore($event)">
+      <ion-infinite-scroll-content></ion-infinite-scroll-content>
+    </ion-infinite-scroll>
 
 </ion-content>

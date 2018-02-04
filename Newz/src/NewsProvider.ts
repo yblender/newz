@@ -16,7 +16,7 @@ export class NewsProvider {
     constructor(public http: Http) {
         console.log('Hello NewsProvider Provider');
   }
-    createRequest(requestUrl: string) {
+    createRequest(requestUrl: string) : Promise<any> {
       
       // don't have the data yet
       return new Promise(resolve => {
@@ -30,25 +30,61 @@ export class NewsProvider {
             // and save the data for later reference
             console.log(requestUrl);
             console.log(data);
-            //if (data.totalResults = 0) {
-            //  this.data = [];
-            //}
-            //else {
-              this.data = data.articles;
-           // }            
-            //console.log(data);
+            
+            this.data = data;
+           
             resolve(this.data);
           });
       });
     }
-    searchNews(searchTerm: string) {      
-      var requestUrl = this.apiUrl + "everything?q=" + searchTerm + this.apiKey;
+    createRequestTest(requestUrl: string): Promise<any> {
+
+      // don't have the data yet
+      return new Promise(resolve => {
+        // We're using Angular HTTP provider to request the data,
+        // then on the response, it'll map the JSON data to a parsed JS object.
+        // Next, we process the data and resolve the promise with the new data.
+        this.http.get(requestUrl)          
+          .subscribe(data => {
+            // we've got back the raw data, now generate the core schedule data
+            // and save the data for later reference
+            console.log(requestUrl);
+            console.log(data);
+
+            this.data = data;
+
+            resolve(this.data);
+          });
+      });
+    }
+    searchNews(searchTerm: string, page: number) {      
+      var requestUrl = this.apiUrl + "everything?q=" + searchTerm + "&page=" + page + this.apiKey;
       return this.createRequest(requestUrl);      
     }
     getHeadlines(country: string, page: number) {
       var requestUrl = this.apiUrl + "top-headlines?country=" + country + "&page=" + page + this.apiKey;
       return this.createRequest(requestUrl);
-    } 
+    }
+    getHeadlinesBySource(sources: Array<string>) {
+      var requestUrl = this.apiUrl + "top-headlines?sources=" + sources.join(',') + this.apiKey;
+      return this.createRequest(requestUrl);
+    }
+    getHeadlinesByCategory(category: string, country: string) {
+      var requestUrl = this.apiUrl + "top-headlines?category=" + category + "&country=" + country + this.apiKey;
+      return this.createRequest(requestUrl);
+    }
+    getHeadlinesBySearch(searchTerm: string, page: number, country: string) {
+      var requestUrl = this.apiUrl + "top-headlines?q=" + searchTerm + "&page=" + page + "&country=" + country + this.apiKey;
+      return this.createRequest(requestUrl);
+    }
+    getSources() {
+      var requestUrl = this.apiUrl + "sources?" + this.apiKey.replace('&', '');
+      return this.createRequest(requestUrl);
+    }
+    getSourcesByCountry(country: string) {
+      var requestUrl = this.apiUrl + "sources?country=" + country + this.apiKey;
+      return this.createRequest(requestUrl);
+    }
     countryOptions = [{
       name: "Australia",
       value: "au"
@@ -59,5 +95,6 @@ export class NewsProvider {
       name: "United Kingdom",
       value: "gb"
     }];
+    categories = ["business", "entertainment", "general", "health", "science", "sports", "technology"];
 
 }
