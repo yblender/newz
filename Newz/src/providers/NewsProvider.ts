@@ -19,7 +19,7 @@ export class NewsProvider {
     createRequest(requestUrl: string) : Promise<any> {
       
       // don't have the data yet
-      return new Promise(resolve => {
+       return new Promise(resolve => {
         // We're using Angular HTTP provider to request the data,
         // then on the response, it'll map the JSON data to a parsed JS object.
         // Next, we process the data and resolve the promise with the new data.
@@ -32,10 +32,20 @@ export class NewsProvider {
             console.log(data);
             
             this.data = data;
-           
+            
             resolve(this.data);
           });
       });
+      
+    }
+    createAndResolveRequest(requestUrl: string) {
+      var request = this.createRequest(requestUrl)
+      request.then(data => {
+        this.data = data;
+      }).catch(error => {
+        console.log(error);
+        });
+      return this.data;
     }
     createRequestTest(requestUrl: string): Promise<any> {
 
@@ -63,6 +73,7 @@ export class NewsProvider {
     }
     getHeadlines(country: string, page: number) {
       var requestUrl = this.apiUrl + "top-headlines?country=" + country + "&page=" + page + this.apiKey;
+      //return this.createRequest(requestUrl);
       return this.createRequest(requestUrl);
     }
     getHeadlinesBySource(sources: Array<string>) {

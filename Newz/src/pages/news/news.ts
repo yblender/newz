@@ -13,11 +13,11 @@ import { DomSanitizer } from '@angular/platform-browser';
     templateUrl: 'news.html'
 })
 export class newsPage {
-  newsUrl: any;
+  newsHtml: any;
   constructor(private sanitizer: DomSanitizer, public navCtrl: NavController, public navParams: NavParams) {
-    var paramUrl = navParams.get("newsUrl");
-    this.newsUrl = paramUrl;
-    console.log(this.newsUrl);
+    var param = navParams.get("newsHtml");
+    this.newsHtml = param;
+    console.log(this.newsHtml);
   }
   sanitizeUrl(url: string) {
     return this.sanitizer.bypassSecurityTrustUrl(url);

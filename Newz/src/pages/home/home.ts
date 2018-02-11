@@ -1,12 +1,15 @@
 import { Component } from '@angular/core';
-import { NewsProvider } from '../../NewsProvider'
+import { NewsProvider } from '../../providers/NewsProvider'
 import { NavController } from 'ionic-angular';
 import { newsPage } from '../news/news';
+import { settingsPage } from '../settings/settings';
+import { stocksPage } from '../stocks/stocks';
 
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html',
   providers: [NewsProvider]
+  
 })
 export class HomePage {
  
@@ -20,6 +23,7 @@ export class HomePage {
   sources: any;
   selectedSources: any;
   categories: any;
+  data: any;
   
   
   constructor(public navCtrl: NavController, private news: NewsProvider) {
@@ -31,6 +35,7 @@ export class HomePage {
     this.loadSources();
     this.selectedSources = new Array();
     this.categories = news.categories;
+    this.data = news.data;
     console.log(this.countries)
   }
 
@@ -39,7 +44,7 @@ export class HomePage {
       return;
     }
     this.page = 1;
-    this.news.getHeadlinesBySearch(this.searchTerm, this.page, this.selectedCountry.value)
+    this.articles = this.news.getHeadlinesBySearch(this.searchTerm, this.page, this.selectedCountry.value)
       .then(data => {
         this.articles = data.articles;
       })
@@ -50,8 +55,8 @@ export class HomePage {
   getHeadlines() {
     this.searchTerm = "";
     this.page = 1;
-    console.log(this.selectedCountry);
-    this.news.getHeadlines(this.selectedCountry.value, this.page)
+    
+    this.news.getHeadlines(this.selectedCountry.value, this.page)    
       .then(data => {
         if (data.totalResults > 0) {
           this.articles = data.articles;
@@ -71,7 +76,11 @@ export class HomePage {
       });
   }
   goToNewsPage(url: string) {
-    this.news.createRequestTest(url);
+    this.news.createRequestTest(url)
+      .then(data => {
+        console.log(data._body);
+        this.navCtrl.push(newsPage, { "newsHtml": data._body });
+      })
   }
   updateSources(sources: any) {
     console.log(sources);
@@ -97,14 +106,14 @@ export class HomePage {
     console.log(this.selectedSources);
   }
   loadSources() {
-    this.news.getSources()
-      .then(data => {
-        this.sources = data.sources;
+    console.log(this.news.getSources());
+      //.then(data => {
+      //  this.sources = data.sources;
         
-        //this.loadDefaultSources();
-      }).catch(error => {
-        console.log(error);
-      });
+      //  //this.loadDefaultSources();
+      //}).catch(error => {
+      //  console.log(error);
+      //});
   }
   loadDefaultSources() {
     this.sources.forEach(source => {
