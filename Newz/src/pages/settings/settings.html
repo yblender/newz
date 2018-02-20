@@ -7,6 +7,9 @@
 <ion-header>
 
   <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
     <ion-title>settings</ion-title>
   </ion-navbar>
 
@@ -14,5 +17,20 @@
 
 
 <ion-content padding>
+  <ion-item>
+    <ion-select [(ngModel)]="selectedCountry">
 
+      <ion-option *ngFor="let country of countries" [value]="country.value">{{country.name}}</ion-option>
+    </ion-select>
+  </ion-item>
+  <ion-item>
+    <ion-label>Sources</ion-label>
+    <ion-select [(ngModel)]="selectedSources" multiple="true">
+
+      <ion-option *ngFor="let source of sources" [value]="source.id">{{source.name}}</ion-option>
+    </ion-select>
+  </ion-item>
+  <ion-item>
+    <button ion-button (click)="saveSettings()">Save Settings</button>
+</ion-item>
 </ion-content>

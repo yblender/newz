@@ -8,7 +8,7 @@ import { stocksPage } from '../stocks/stocks';
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html',
-  providers: [NewsProvider]
+  providers: [NewsProvider, settingsPage]
   
 })
 export class HomePage {
@@ -25,26 +25,45 @@ export class HomePage {
   categories: any;
   data: any;
   
-  
-  constructor(public navCtrl: NavController, private news: NewsProvider) {
-    this.page = 1;
-    
-    this.countries = news.countryOptions;
-    this.selectedCountry = this.getCountry("gb");    
-    this.getHeadlines();
-    this.loadSources();
-    this.selectedSources = new Array();
-    this.categories = news.categories;
-    this.data = news.data;
-    console.log(this.countries)
-  }
 
+  constructor(public navCtrl: NavController, private news: NewsProvider, private settings: settingsPage) {
+    this.page = 1;
+    this.initialize();    
+    
+  }
+  initialize() {
+    this.countries = this.news.countryOptions;
+    this.loadSources();
+    this.getSettingsAndHeadline();
+    this.categories = this.news.categories;
+    
+  }
+  getSettingsAndHeadline() {
+
+    this.settings.getDefaultSources()
+      .then(val => { this.selectedSources = val })
+    if (this.selectedSources == null) {
+      this.selectedSources = new Array();
+    }
+    this.settings.getDefaultCountry()
+      .then(val => {
+
+        if (val == null || typeof (val) == null) {
+          this.selectedCountry = this.getCountry("gb");
+        }
+        else {
+          this.selectedCountry = val;
+        }
+        this.getHeadlines();
+      });
+    
+  }
   getNews() {
     if (this.searchTerm == undefined || this.searchTerm == "") {
       return;
     }
     this.page = 1;
-    this.articles = this.news.getHeadlinesBySearch(this.searchTerm, this.page, this.selectedCountry.value)
+    this.articles = this.news.getHeadlinesBySearch(this.searchTerm, this.page, this.selectedCountry)
       .then(data => {
         this.articles = data.articles;
       })
@@ -56,7 +75,7 @@ export class HomePage {
     this.searchTerm = "";
     this.page = 1;
     
-    this.news.getHeadlines(this.selectedCountry.value, this.page)    
+    this.news.getHeadlines(this.selectedCountry, this.page)    
       .then(data => {
         if (data.totalResults > 0) {
           this.articles = data.articles;
@@ -67,7 +86,7 @@ export class HomePage {
       }); 
   }
   getHeadlinesByCategory(category) {
-    this.news.getHeadlinesByCategory(category, this.selectedCountry.value)
+    this.news.getHeadlinesByCategory(category, this.selectedCountry)
       .then(data => {
         this.articles = data.articles;
       })
@@ -79,7 +98,7 @@ export class HomePage {
     this.news.createRequestTest(url)
       .then(data => {
         console.log(data._body);
-        this.navCtrl.push(newsPage, { "newsHtml": data._body });
+        this.navCtrl.push(newsPage, { "newsHtml": data._body, "url" : url });
       })
   }
   updateSources(sources: any) {
@@ -106,14 +125,14 @@ export class HomePage {
     console.log(this.selectedSources);
   }
   loadSources() {
-    console.log(this.news.getSources());
-      //.then(data => {
-      //  this.sources = data.sources;
+    this.news.getSources()
+      .then(data => {
+        this.sources = data.sources;
         
-      //  //this.loadDefaultSources();
-      //}).catch(error => {
-      //  console.log(error);
-      //});
+        //this.loadDefaultSources();
+      }).catch(error => {
+        console.log(error);
+      });
   }
   loadDefaultSources() {
     this.sources.forEach(source => {

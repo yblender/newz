@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Pipe, PipeTransform } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
-import { DomSanitizer } from '@angular/platform-browser';
+import { SafeResourceUrl, DomSanitizer } from '@angular/platform-browser';
 
 /*
   Generated class for the news page.
@@ -12,15 +12,21 @@ import { DomSanitizer } from '@angular/platform-browser';
     selector: 'page-news',
     templateUrl: 'news.html'
 })
+@Pipe({ name: 'safe' })
 export class newsPage {
   newsHtml: any;
+  url: string;
   constructor(private sanitizer: DomSanitizer, public navCtrl: NavController, public navParams: NavParams) {
-    var param = navParams.get("newsHtml");
-    this.newsHtml = param;
-    console.log(this.newsHtml);
+    var htmlParam = navParams.get("newsHtml");
+    this.newsHtml = htmlParam;
+    var urlParam = navParams.get("url");
+
+    this.url = urlParam;
+    console.log(this.url);
+    
   }
-  sanitizeUrl(url: string) {
-    return this.sanitizer.bypassSecurityTrustUrl(url);
+  sanitizeUrl() {
+    return this.sanitizer.bypassSecurityTrustUrl(this.url);
   }
     ionViewDidLoad() {
         console.log('ionViewDidLoad newsPage');

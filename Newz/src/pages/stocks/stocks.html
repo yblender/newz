@@ -7,6 +7,9 @@
 <ion-header>
 
   <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
     <ion-title>stocks</ion-title>
   </ion-navbar>
 
@@ -19,4 +22,49 @@
     <ion-input placeholder="Search for something i guess..." [(ngModel)]="searchedSymbol"></ion-input>
   </ion-item>
   <button ion-button round (click)="getPrice()">Get Price</button>
+  <ion-grid *ngIf="priceObject != null">
+    <ion-row>
+      <ion-col>
+        Symbol
+      </ion-col>
+      <ion-col id="open">{{metaData["2. Symbol"]}}</ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        Open
+      </ion-col>
+      <ion-col id="open">{{priceObject["1. open"]}}</ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        High
+      </ion-col>
+      <ion-col id="high">{{priceObject["2. high"]}}</ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        Low
+      </ion-col>
+      <ion-col id="low">{{priceObject["3. low"]}}</ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        Close
+      </ion-col>
+      <ion-col id="close">{{priceObject["4. close"]}}</ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        Volume
+      </ion-col>
+      <ion-col id="volume">{{priceObject["5. volume"]}}</ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        Last Refreshed
+      </ion-col>
+      <ion-col id="open">{{metaData["3. Last Refreshed"]}}</ion-col>
+    </ion-row>
+
+  </ion-grid>
 </ion-content>

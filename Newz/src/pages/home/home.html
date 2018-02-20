@@ -23,7 +23,7 @@
   <div *ngIf="isGroupShown(i)">
     <ion-item>
       <ion-label>Country</ion-label>
-      <ion-select [(ngModel)]="selectedCountry.value" (ionChange)="changeCountry($event)">
+      <ion-select [(ngModel)]="selectedCountry" (ionChange)="changeCountry($event)">
         
         <ion-option *ngFor="let country of countries" [value]="country.value">{{country.name}}</ion-option>
       </ion-select>
@@ -52,7 +52,9 @@
           <p>source: {{article.source.name}}</p>
           <a class="item" href="{{article.url}}">Link</a>
           <p>published at: {{article.publishedAt}}</p>
-          <button (click)="goToNewsPage(article.url)">Open News</button>
+          <!--<ion-item>
+            <button (click)="goToNewsPage(article.url)">Open News</button>
+          </ion-item>-->
           
         </div>
 
